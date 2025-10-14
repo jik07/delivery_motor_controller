@@ -3,7 +3,7 @@
 #include <commands.h>
 
 
-/* Variable initialization */
+/* Command parsing variables */
 
 // A pair of varibles to help parse serial commands (thanks Fergs)
 int arg = 0;
@@ -23,8 +23,11 @@ char argv2[ARG_MAX_LEN];
 long arg1;
 long arg2;
 
+
 // Run command based on currently parsed command:
 void runCommand();
+
+void resetCommand();
 
 // Error parsing command, send back an error over serial
 void errorCommand();
@@ -41,7 +44,30 @@ void loop() {
 }
 
 void runCommand() {
+  switch (cmd) {
+  case SET_MOTOR_PWM:
+    //TODO
+  case GET_ENCODER:
+    //TODO
+  default:
+    errorCommand();
+  }
+}
 
+void resetCommand() {
+  arg = 0;
+  index = 0;
+  cmd = NULL;
+  memset(argv1, 0, sizeof(argv1));
+  memset(argv2, 0, sizeof(argv2));
+  arg1 = 0;
+  arg2 = 0;
+}
+
+void errorCommand() {
+  Serial.print(ERROR_RES);
+  Serial.print(NEW_COMMAND);
+  resetCommand();
 }
 
 void processBuffer() {
